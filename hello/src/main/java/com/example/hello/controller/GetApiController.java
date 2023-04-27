@@ -1,6 +1,9 @@
 package com.example.hello.controller;
 
+import com.example.hello.dto.UserRequest;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/get")
@@ -25,11 +28,51 @@ public class GetApiController {
 
     // http://localhost:8080/api/get/path-variable/{name}
     // 변수를 사용할 때는 변수의 이름과 @GetMapping 주소 {}안의 이름이 동일해야 한다.
+    // 주소에는 대문자가 들어갈 수 없기 때문에 -를 넣어 주소를 작성해줄 수 있다.
     @GetMapping("/path-variable/{name}")
     public String pathVariable(@PathVariable String name) {
         System.out.println("PathVariable : " + name);
         return name;
-
     }
 
+    // http://localhost:8080/api/get/query-param?user=steve&email=steve@gmail.com&age=30
+    @GetMapping(path = "query-param")
+    public String queryParam(@RequestParam Map<String, String> queryParam) {
+        StringBuilder sb = new StringBuilder();
+
+        queryParam.entrySet().forEach(entry -> {
+
+            System.out.println(entry.getKey());
+            System.out.println(entry.getValue());
+            System.out.println("\n");
+
+            sb.append(entry.getKey()+" = " + entry.getValue() + "\n");
+        });
+
+        return sb.toString();
+    }
+
+    @GetMapping("query-param02")
+    public String queryParam02(
+            @RequestParam String name,
+            @RequestParam String email,
+            @RequestParam int age
+    ) {
+
+        System.out.println(name);
+        System.out.println(email);
+        System.out.println(age);
+
+        return name + " " + email + " " + age;
+    }
+
+    @GetMapping("query-param03")
+    public String queryParam03(UserRequest userRequest){
+
+        System.out.println(userRequest.getName());
+        System.out.println(userRequest.getEmail());
+        System.out.println(userRequest.getAge());
+
+        return userRequest.toString();
+    }
 }
